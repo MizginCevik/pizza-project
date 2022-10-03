@@ -8,20 +8,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
 
 @Controller
-
+@RequestMapping("/design")
 public class DesignPizzaController {
 
-    private final PizzaRepository pizzaRepository;
+    private final PizzaRepository pizzaRepository; //without final still be working
 
-    public DesignPizzaController(PizzaRepository pizzaRepository) {
+    public DesignPizzaController(PizzaRepository pizzaRepository) { //we need initialization so constructor needed
         this.pizzaRepository = pizzaRepository;
     }
 
-    @GetMapping("/design")
+    @GetMapping      //localhost:8080/design
     public String showDesignForm(Model model) {
 
         model.addAttribute("pizza", new Pizza());
@@ -33,14 +34,15 @@ public class DesignPizzaController {
 
     }
 
-    @PostMapping("/createPizza")
+    @PostMapping("/createPizza") //we can remove this endpoint, or we can go to html and change the action
     public String processPizza(@ModelAttribute("pizza") Pizza pizza) {
 
         pizza.setId(UUID.randomUUID());
         pizzaRepository.createPizza(pizza);
 
-        return "redirect:/orders/current?pizzaId=" + pizza.getId();
+        return "redirect:/orders/current?pizzaId=" + pizza.getId(); // ? ->query parameter
 
     }
 
 }
+//command+shift+F -> shows all used UUID
